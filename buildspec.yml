@@ -17,7 +17,7 @@ phases:
 #       - go build -o main
       - go get github.com/aws/aws-lambda-go/events
       - go get github.com/aws/aws-lambda-go/lambda
-      - go build main.go
+      - go build lambda_function.go
       - zip -m maindeploy.zip main
       
       # Package our application with AWS SAM
