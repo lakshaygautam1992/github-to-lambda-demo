@@ -18,7 +18,7 @@ phases:
       - go get github.com/aws/aws-lambda-go/events
       - go get github.com/aws/aws-lambda-go/lambda
       - go build lambda_function.go
-      - zip -m maindeploy.zip main
+      - zip -m maindeploy.zip lambda_function
       
       # Package our application with AWS SAM
 #       - aws cloudformation package --template-file template.yml --s3-bucket ${S3_BUCKET} --output-template-file packaged.yml
