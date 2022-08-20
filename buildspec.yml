@@ -1,19 +1,35 @@
 version: 0.2
+
+env:
+  variables:
+    S3_BUCKET: "codedeploymentlambda"
+    PACKAGE: "github.com/shashankp1992/go"
+
 phases:
+
   install:
-    runtime-versions:
-      python: 3.10
     commands:
-      - echo "Installing dependencies..."
+      # Print all environment variables (handy for AWS CodeBuild logs)
+      - env
+
   build:
     commands:
-      - echo "Zipping deployment package..."
-      - cd /var/lib
-      - zip -r9 ../deployment_package.zip .
-      - cd ..
-      - zip deployment_package.zip lambda_function.go
+      # Build our go application
+#       - go build -o main
+      - go get github.com/aws/aws-lambda-go/events
+      - go get github.com/aws/aws-lambda-go/lambda
+      - go build main.go
+      - zip -m maindeploy.zip main
+      
+      # Package our application with AWS SAM
+#       - aws cloudformation package --template-file template.yml --s3-bucket ${S3_BUCKET} --output-template-file packaged.yml
+
   post_build:
     commands:
       - echo "Updating lambda Function..."
-      - aws lambda update-function-code --function-name github-to-lambda-demo --zip-file fileb://deployment_package.zip
+      - aws lambda update-function-code --function-name codedeployment --zip-file fileb://maindeploy.zip
       - echo "DONE!!"
+
+# artifacts:
+#   files:
+#     - packaged.yml
